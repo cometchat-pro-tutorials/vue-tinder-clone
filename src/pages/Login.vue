@@ -13,15 +13,23 @@
           <div class="column q-gutter-y-md q-mt-xl q-mb-lg">
             <q-input
               v-model="user.email"
-              label="email address"
+              label="Email address"
               rounded
-              outlined/>
+              outlined>
+              <template v-slot:prepend>
+                <q-icon name="mail" color="pink-2" class="q-ml-sm"/>
+              </template>
+            </q-input>
             <q-input
               v-model="user.password"
-              label="password"
+              label="Password"
               type="password"
               rounded
-              outlined />
+              outlined>
+              <template v-slot:prepend>
+                <q-icon name="vpn_key" color="pink-2" class="q-ml-sm" />
+              </template>
+            </q-input>
           </div>
           <div class="row reverse items-center justify-between">
             <q-btn rounded label="Sign In" color="pink" class="q-px-xl"/>
@@ -31,8 +39,10 @@
       </q-page>
     </q-page-container>
     <img src="~assets/couple.svg" class="block absolute-bottom" width="250px" style="left: -15%; z-index: -1; opacity: .8"/>
-    <div class="text-center fixed-bottom text- text-underline q-pb-md">Not yet registered?
-    <span class="text-orange text-weight-bold text-italic cursor-pointer register-link">Create an account</span></div>
+    <div class="fixed-bottom row items-center justify-center q-pb-md">
+      <div>Not yet registered?</div>
+      <q-btn to="/register" dense flat label="Create an account" no-caps color="orange" class="text-body1 text-italic"/>
+    </div>
   </q-layout>
 </template>
 <style lang="stylus" scoped>
@@ -62,8 +72,6 @@
   z-index -1
   background radial-gradient($pink-2, $pink-3)
   border-radius 50%
-.register-link:hover
-  text-decoration underline
 </style>
 <script>
 import { QInput } from 'quasar'
