@@ -13,9 +13,12 @@
           <div class="column q-gutter-y-md q-mt-xl q-mb-lg">
             <q-input
               v-model="user.email"
-              label="Email address"
+              label="Email"
               rounded
-              outlined>
+              outlined
+              hide-bottom-space
+              @blur="$v.user.email.$touch"
+              :error="$v.user.email.$error">
               <template v-slot:prepend>
                 <q-icon name="mail" color="pink-2" class="q-ml-sm"/>
               </template>
@@ -23,16 +26,38 @@
             <q-input
               v-model="user.password"
               label="Password"
-              type="password"
               rounded
-              outlined>
+              outlined
+              hide-bottom-space
+              @blur="$v.user.password.$touch"
+              :error="$v.user.password.$error"
+              :type="passwordToggle ? 'text' : 'password'">
               <template v-slot:prepend>
-                <q-icon name="vpn_key" color="pink-2" class="q-ml-sm" />
+                <q-icon name="vpn_key" color="pink-2" class="q-ml-sm"/>
+              </template>
+              <template v-slot:append>
+                <q-btn
+                  v-if="user.password"
+                  dense
+                  rounded
+                  size="sm"
+                  unelevated
+                  color="pink-1"
+                  class="q-px-sm"
+                  text-color="pink"
+                  :label="passwordToggle ? 'hide' : 'show'"
+                  @click="passwordToggle = !passwordToggle" />
               </template>
             </q-input>
           </div>
           <div class="row reverse items-center justify-between">
-            <q-btn rounded label="Sign In" color="pink" class="q-px-xl"/>
+            <q-btn
+              :disable="$v.user.$invalid"
+              rounded
+              color="pink"
+              class="q-px-xl"
+              label="Sign In"
+              />
             <span class="text-weight-light text-primary text-italic">Forgot password?</span>
           </div>
         </section>
@@ -75,6 +100,7 @@
 </style>
 <script>
 import { QInput } from 'quasar'
+import { required, email } from 'vuelidate/lib/validators'
 
 export default {
   name: 'Login',
@@ -86,7 +112,14 @@ export default {
       user: {
         email: '',
         password: ''
-      }
+      },
+      passwordToggle: false
+    }
+  },
+  validations: {
+    user: {
+      email: { required, email },
+      password: { required }
     }
   }
 }

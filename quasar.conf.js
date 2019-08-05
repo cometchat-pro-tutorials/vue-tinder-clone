@@ -6,7 +6,8 @@ module.exports = function (ctx) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     boot: [
-      'axios'
+      'axios',
+      'vuelidate'
     ],
 
     css: [
@@ -76,6 +77,11 @@ module.exports = function (ctx) {
             formatter: require('eslint').CLIEngine.getFormatter('stylish')
           }
         })
+      },
+      chainWebpack(chain) {
+        const path = require('path')
+        chain.resolve.alias.set('statics', path.resolve(__dirname, './src/statics'))
+        chain.resolve.alias.set('$constants', path.resolve(__dirname, './src/constants'))
       }
     },
 
