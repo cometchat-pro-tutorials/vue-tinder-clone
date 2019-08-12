@@ -1,0 +1,62 @@
+{
+    "identityPoolName": "emberc9815bbb_identitypool_c9815bbb",
+    "allowUnauthenticatedIdentities": false,
+    "openIdLambdaRoleName": "embercc9815bbb_openid_lambda_role",
+    "resourceNameTruncated": "emberc9815bbb",
+    "userPoolName": "emberc9815bbb_userpool_c9815bbb",
+    "autoVerifiedAttributes": [
+        "email"
+    ],
+    "mfaConfiguration": "OFF",
+    "mfaTypes": [
+        "SMS Text Message"
+    ],
+    "smsAuthenticationMessage": "Your authentication code is {####}",
+    "smsVerificationMessage": "Your verification code is {####}",
+    "emailVerificationSubject": "Your verification code",
+    "emailVerificationMessage": "Your verification code is {####}",
+    "defaultPasswordPolicy": false,
+    "passwordPolicyMinLength": 8,
+    "passwordPolicyCharacters": [],
+    "requiredAttributes": [
+        "email"
+    ],
+    "userpoolClientName": "embercc9815bbb_app_client",
+    "userpoolClientGenerateSecret": true,
+    "userpoolClientRefreshTokenValidity": 30,
+    "userpoolClientWriteAttributes": [
+        "email"
+    ],
+    "userpoolClientReadAttributes": [
+        "email"
+    ],
+    "mfaLambdaRole": "embercc9815bbb_totp_lambda_role",
+    "userpoolClientLambdaRole": "embercc9815bbb_userpoolclient_lambda_role",
+    "userpoolClientSetAttributes": false,
+    "resourceName": "emberc9815bbb",
+    "authSelections": "identityPoolAndUserPool",
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "authRoleArn": {
+        "Fn::GetAtt": [
+            "AuthRole",
+            "Arn"
+        ]
+    },
+    "unauthRoleArn": {
+        "Fn::GetAtt": [
+            "UnauthRole",
+            "Arn"
+        ]
+    },
+    "useDefault": "default",
+    "usernameAttributes": [
+        "email"
+    ],
+    "additionalQuestions": [],
+    "dependsOn": []
+}

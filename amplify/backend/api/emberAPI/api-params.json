@@ -1,0 +1,42 @@
+{
+    "paths": [
+        {
+            "name": "/register",
+            "lambdaFunction": "emberAPI",
+            "privacy": {
+                "open": true
+            }
+        },
+        {
+            "name": "/token",
+            "lambdaFunction": "emberAPI",
+            "privacy": {
+                "open": true
+            }
+        }
+    ],
+    "resourceName": "emberAPI",
+    "apiName": "emberAPI",
+    "functionArns": [
+        {
+            "lambdaFunction": "emberAPI"
+        }
+    ],
+    "privacy": {
+        "auth": 0,
+        "unauth": 0,
+        "authRoleName": "ember-ember-20190807124257-authRole",
+        "unAuthRoleName": "ember-ember-20190807124257-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "emberAPI",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ],
+    "uuid": "174e63d5"
+}

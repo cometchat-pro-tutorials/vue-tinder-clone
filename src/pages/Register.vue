@@ -1,18 +1,12 @@
 <template>
   <q-layout view="lHh lpr lFf">
-    <q-header class="header">
-      <q-toolbar>
-        <q-btn flat icon="arrow_back" dense size="sm" to="/login"/>
-        <q-toolbar-title class="text-body1  text-center">Sign Up</q-toolbar-title>
-      </q-toolbar>
-      <section class="q-px-lg q-ml-sm q-py-lg q-mb-sm">
-        <div class="text-h3 text-weight-bold">New</div>
-        <div class="text-h5">Account</div>
-      </section>
-    </q-header>
     <q-page-container>
-      <q-page padding>
-        <section class="absolute-center full-width q-pa-xl">
+      <q-page>
+        <section class="header q-px-lg q-py-lg text-white">
+          <div class="text-h3 text-weight-bold">New</div>
+          <div class="text-h5">Account</div>
+        </section>
+        <section v-if="currentStatus === Status.START" class="full-width q-pa-xl">
           <div v-show="errorMessage" class="q-mb-sm text-negative text-italic">
             *<span v-html="errorMessage" />
           </div>
@@ -23,7 +17,7 @@
               outlined
               hide-bottom-space
               label="Full Name"
-              v-model="user.fullName"
+              v-model.trim="user.fullName"
               @blur="$v.user.fullName.$touch"
               :error="$v.user.fullName.$error">
               <template v-slot:prepend>
@@ -36,7 +30,7 @@
               outlined
               type="email"
               hide-bottom-space
-              v-model="user.email"
+              v-model.trim="user.email"
               label="Email Address"
               @blur="$v.user.email.$touch"
               :error="$v.user.email.$error">
@@ -50,7 +44,7 @@
               outlined
               hide-bottom-space
               label="Password"
-              v-model="user.password"
+              v-model.trim="user.password"
               @blur="$v.user.password.$touch"
               :error="$v.user.password.$error"
               :type="passwordToggle.main ? 'text' : 'password'">
@@ -77,7 +71,7 @@
               outlined
               hide-bottom-space
               label="Confirm Password"
-              v-model="user.confirmPassword"
+              v-model.trim="user.confirmPassword"
               @blur="$v.user.confirmPassword.$touch"
               :error="$v.user.confirmPassword.$error"
               :type="passwordToggle.confirm ? 'text' : 'password'">
@@ -126,13 +120,47 @@
               class="full-width"
               label="Sign Up"
               color="primary"
+              @click="doRegister"
               rounded />
           </section>
+        </section>
+        <section v-else-if="currentStatus === Status.LOADING" class="absolute-center q-px-xl full-width text-center">
+          <q-spinner-pie size="5em" color="primary" />
+          <p class="text-pink-3 text-italic text-center q-mt-lg">{{loadingMesage}}</p>
+        </section>
+        <section v-else-if="currentStatus === Status.CONFIRM_CODE" class="full-width q-px-xl q-mt-xl">
+          <p>Please input the confirmation code was sent on your <strong>{{user.email}}</strong> email</p>
+          <q-input
+            rounded
+            outlined
+            mask="######"
+            label="Confirmation Code"
+            v-model="confirmationCode"
+            :rules="[val => val.length === 6 || 'Invalid confirmation code']"/>
+          <q-btn
+            rounded
+            :disable="confirmationCode.length !== 6"
+            label="confirm"
+            color="primary"
+            class="full-width q-mt-lg"
+            @click="confirmCode" />
+        </section>
+        <section v-else-if="currentStatus === Status.ERROR" class="absolute-center q-px-xl full-width text-center">
+          <q-icon name="error_outline" size="10rem" color="primary" />
+          <p class="text-pink-3 text-italic text-center q-mt-lg">{{requestErrorMessage || 'Error encountered while creating your account.'}}</p>
+          <q-btn label="Try again" color="primary" rounded class="q-mt-sm" @click="currentStatus = Status.START"/>
+        </section>
+        <section v-else-if="currentStatus === Status.FINISH" class="absolute-center q-px-xl full-width text-center">
+          <img src="~assets/congratulations.svg" width="200px"/>
+          <p class="text-pink-3 text-italic text-center q-mt-lg">
+            Congratulations <strong>{{user.fullName}}</strong>! <br> Your Ember account has been sucessfully created.
+          </p>
+          <q-btn label="Start Using Ember" color="primary" rounded class="q-mt-sm" @click="$router.replace('/login')"/>
         </section>
       </q-page>
     </q-page-container>
     <img src="~assets/waiting-tree.svg" class="block absolute-bottom-right" width="200px" style="right: -15%; z-index: -1; opacity: .5"/>
-    <div class="fixed-bottom row items-center justify-center q-pb-md">
+    <div v-if="currentStatus !== Status.FINISH" class="absolute-bottom row items-center justify-center q-pb-md">
       <div>Already have an account?</div>
       <q-btn to="/login" dense flat label="Log in" no-caps color="orange" class="text-body1 text-italic"/>
     </div>
@@ -144,7 +172,7 @@
   background linear-gradient(to bottom right, $pink, $pink-3)
 </style>
 <script>
-import { QInput, QToggle } from 'quasar'
+import { QInput, QToggle, QSpinnerPie } from 'quasar'
 
 import {
   email,
@@ -161,10 +189,21 @@ export default {
   name: 'Register',
   components: {
     QInput,
-    QToggle
+    QToggle,
+    QSpinnerPie
   },
   data () {
     return {
+      currentStatus: 0,
+      Status: {
+        START: 0,
+        LOADING: 1,
+        CONFIRM_CODE: 2,
+        FINISH: 3,
+        ERROR: -1
+      },
+      loadingMesage: '',
+      requestErrorMessage: '',
       passwordToggle: {
         main: false,
         confirm: false
@@ -176,7 +215,9 @@ export default {
         confirmPassword: null,
         age: SignUpConstants.ageRestriction,
         accept: false
-      }
+      },
+      confirmationCode: '',
+      createdUID: ''
     }
   },
   computed: {
@@ -206,6 +247,41 @@ export default {
         return `You should be <strong>at least ${this.$v.user.age.$params.minValue.min}</strong> to sign up.`
       }
       return ''
+    }
+  },
+  methods: {
+    async doRegister () {
+      this.loadingMesage = 'Signing you up. Please wait...'
+      this.currentStatus = this.Status.LOADING
+      try {
+        const { userSub } = await this.$store.dispatch('user/signUp', {
+          username: this.user.email,
+          password: this.user.password,
+          attributes: { email: this.user.email }
+        })
+        this.createdUID = userSub
+        this.currentStatus = this.Status.CONFIRM_CODE
+      } catch (error) {
+        this.requestErrorMessage = error.message
+        this.currentStatus = this.Status.ERROR
+      }
+    },
+    async confirmCode () {
+      try {
+        this.loadingMesage = 'Validating confirmation code. Please wait...'
+        this.currentStatus = this.Status.LOADING
+        await this.$store.dispatch('user/confirmSignUp', {
+          email: this.user.email,
+          confirmationCode: this.confirmationCode
+        })
+        await this.$store.dispatch('user/create', {
+          ...this.user, uid: this.createdUID
+        })
+        this.currentStatus = this.Status.FINISH
+      } catch (error) {
+        this.requestErrorMessage = error.message
+        this.currentStatus = this.Status.ERROR
+      }
     }
   },
   validations () {

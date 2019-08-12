@@ -6,10 +6,12 @@ Tinder Close using CometChat Pro
 
 ### Install Dependencies
 ```bash
+yarn global add @quasar/cli
 yarn install
 ```
 or
 ```bash
+npm install -g @quasar/cli
 npm install
 ```
 

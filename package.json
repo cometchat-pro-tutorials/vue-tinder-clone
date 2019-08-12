@@ -1,6 +1,6 @@
 {
   "name": "ember",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "Tinder Close using CometChat Pro",
   "productName": "Ember",
   "cordovaId": "org.yevlabs.ember",
@@ -11,7 +11,9 @@
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
+    "@cometchat-pro/chat": "^1.8.6",
     "@quasar/extras": "^1.0.0",
+    "aws-amplify": "^1.1.36",
     "axios": "^0.18.1",
     "quasar": "^1.0.0",
     "vuelidate": "^0.7.4"

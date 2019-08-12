@@ -3,13 +3,13 @@
 
 module.exports = function (ctx) {
   return {
-    // app boot file (/src/boot)
-    // --> boot files are part of "main.js"
+    preFetch: true,
     boot: [
       'axios',
-      'vuelidate'
+      'amplify',
+      'vuelidate',
+      'cometchat'
     ],
-
     css: [
       'app.styl'
     ],
@@ -54,7 +54,7 @@ module.exports = function (ctx) {
 
       // Quasar plugins
       plugins: [
-        'Notify'
+        'LocalStorage'
       ]
     },
 

@@ -1,0 +1,19 @@
+{
+    "ember": {
+        "awscloudformation": {
+            "AuthRoleName": "ember-ember-20190807124257-authRole",
+            "UnauthRoleArn": "arn:aws:iam::258508089301:role/ember-ember-20190807124257-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::258508089301:role/ember-ember-20190807124257-authRole",
+            "Region": "us-east-2",
+            "DeploymentBucketName": "ember-ember-20190807124257-deployment",
+            "UnauthRoleName": "ember-ember-20190807124257-unauthRole",
+            "StackName": "ember-ember-20190807124257",
+            "StackId": "arn:aws:cloudformation:us-east-2:258508089301:stack/ember-ember-20190807124257/d4dbc590-b8cd-11e9-9843-0285144e27ac"
+        },
+        "categories": {
+            "auth": {
+                "emberc9815bbb": {}
+            }
+        }
+    }
+}
