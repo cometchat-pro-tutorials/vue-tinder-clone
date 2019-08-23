@@ -107,25 +107,11 @@
 <script>
 import { QInput } from 'quasar'
 import { required, email } from 'vuelidate/lib/validators'
-import { Auth } from 'aws-amplify'
-import { CometChat } from '@cometchat-pro/chat'
 
 export default {
   name: 'Login',
   components: {
     QInput
-  },
-  async preFetch ({ redirect, store }) {
-    const user = await Auth.currentUserInfo()
-    if (!user) {
-      return Promise.resolve()
-    }
-    const token = store.getters['user/token']
-    if (!token) {
-      await store.dispatch('user/auth', user.username)
-    }
-    await CometChat.login(token)
-    return redirect('/')
   },
   data () {
     return {

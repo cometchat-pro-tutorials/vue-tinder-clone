@@ -13,6 +13,13 @@
             "privacy": {
                 "open": true
             }
+        },
+        {
+            "name": "/has-matched",
+            "lambdaFunction": "emberAPI",
+            "privacy": {
+                "open": true
+            }
         }
     ],
     "resourceName": "emberAPI",
@@ -38,5 +45,5 @@
             ]
         }
     ],
-    "uuid": "174e63d5"
+    "uuid": "4756a72d"
 }

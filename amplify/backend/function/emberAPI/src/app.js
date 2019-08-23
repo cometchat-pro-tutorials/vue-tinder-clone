@@ -36,6 +36,16 @@ app.use(function(req, res, next) {
   next()
 });
 
+app.post('/has-matched', function(req, res) {
+  const { me, them } = req.body
+  const groupId = `${them}-${me}`
+  axios.post(`users/${me}/groups/${groupId}/members`)
+    .then(response => res.json({
+      success: 'Successfully, joined private chat!',
+      data: response.data.data
+    }))
+    .catch(error => res.status(200).json({ error }))
+});
 
 app.get('/token', function(req, res) {
   axios.get(`users/${req.query.uid}/auth_tokens`)

@@ -9,6 +9,10 @@ export const setUID = (state, uid) => {
   state.uid = uid
 }
 
+export const clearUID = (state) => {
+  state.uid = null
+}
+
 export const clearToken = (state) => {
   state.token = null
   LocalStorage.remove(state.tokenKey)

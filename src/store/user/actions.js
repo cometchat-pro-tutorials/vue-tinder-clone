@@ -13,7 +13,6 @@ export const create = async ({ commit }, payload) => {
   await API.post('emberAPI', '/register', { body: payload })
   const { data } = await API.post('emberAPI', '/token', { body: { uid: payload.uid } })
   commit('setAuthToken', data.authToken)
-  commit('setUID', data.uid)
 }
 
 export const auth = async ({ commit }, uid) => {
@@ -41,8 +40,26 @@ export const fetch = async ({ commit }) => {
   commit('setInfo', await CometChat.getLoggedinUser())
 }
 
-export const logout = async ({ commit }) => {
-  await Auth.signOut()
+export const logout = async ({ commit, getters }) => {
+  await Promise.all([
+    Auth.signOut(),
+    CometChat.logout()
+  ])
   commit('clearToken')
-  return CometChat.logout()
+  commit('clearUID')
+  return Promise.resolve()
+}
+
+export const fetchCurrentUser = async ({ commit }) => {
+  try {
+    const [user] = await Promise.all([
+      Auth.currentUserInfo(),
+      CometChat.getLoggedinUser()
+    ])
+    return user !== null
+  } catch (error) {
+    commit('clearToken')
+    commit('clearUID')
+    return false
+  }
 }

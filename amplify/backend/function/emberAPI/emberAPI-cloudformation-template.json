@@ -63,7 +63,7 @@
 				"Timeout": "25",
 				"Code": {
 					"S3Bucket": "ember-ember-20190807124257-deployment",
-					"S3Key": "amplify-builds/emberAPI-57443365344c32527165-build.zip"
+					"S3Key": "amplify-builds/emberAPI-6a67684852794f72755a-build.zip"
 				}
 			}
 		},

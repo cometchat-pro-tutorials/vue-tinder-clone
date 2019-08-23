@@ -5,10 +5,12 @@ module.exports = function (ctx) {
   return {
     preFetch: true,
     boot: [
+      'ember',
       'axios',
       'amplify',
       'vuelidate',
-      'cometchat'
+      'cometchat',
+      'routeguards'
     ],
     css: [
       'app.styl'
